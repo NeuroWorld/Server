@@ -1,11 +1,4 @@
-class Greeter {
-    constructor(public greeting: string) {
-    }
+import {Runner} from "./runner";
 
-    greet() {
-        return this.greeting;
-    }
-}
-
-const greeter = new Greeter("Hello, Ministry of Programming!");
-console.log(greeter.greet());
+const runner = new Runner();
+runner.run();
