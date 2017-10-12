@@ -1,0 +1,12 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "main": "dist/server.js",
+  "repository": "git@github.com:NeuroWorld/Server.git",
+  "author": "Martin Morávek (moravek.martin) <moravek.martin@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "typescript": "^2.5.3"
+  }
+}
