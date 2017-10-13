@@ -1,8 +1,8 @@
-import {Entity} from "./entity";
-import {range} from "./utils";
 import {Brain} from "./brain";
-import {World} from "./world";
+import {Entity} from "./entity";
 import {Reporter} from "./reporter";
+import {range} from "./utils";
+import {World} from "./world";
 
 export class Runner {
     protected world: World;
@@ -14,11 +14,11 @@ export class Runner {
         this.reporter = new Reporter();
         this.world = new World(this.reporter);
         this.brain = new Brain();
-        this.entities = range(10).map(i => new Entity(i));
+        this.entities = range(10).map((i) => new Entity(i));
     }
 
-    run() {
-        while(true) {
+    public run() {
+        while (true) {
             this.world.update();
             this.world.bake();
         }

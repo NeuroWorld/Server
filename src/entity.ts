@@ -4,7 +4,7 @@ export class Entity {
     public health: number;
     public hunger: number;
     public speed: number;
-    public position: Victor
+    public position: Victor;
     public direction: Victor;
 
     constructor(public id: number) {
@@ -14,15 +14,15 @@ export class Entity {
         this.direction = new Victor(Math.random(), Math.random()).normalize();
     }
 
-    move() {
+    public move() {
         this.position.add(this.direction);
     }
 
-    turn() {
+    public turn() {
         this.direction.rotate(0.01);
     }
 
-    eat(food: number): number {
+    public eat(food: number): number {
         if (food > this.hunger) {
             food -= this.hunger;
             this.hunger = 0;

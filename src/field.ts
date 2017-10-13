@@ -1,14 +1,13 @@
-import {between} from "./utils";
-import {Reporter} from "./reporter";
 import {DTOField} from "./dto-field";
+import {Reporter} from "./reporter";
+import {between} from "./utils";
 
 export class Field {
     public food: number;
     public water: number;
     public rocks: number;
     public fire: number;
-
-    public changes: { (self: Field): void; } [];
+    public changes: Array<(self: Field) => void>;
 
     constructor(protected reporter: Reporter) {
         this.food = Math.random();
@@ -20,18 +19,18 @@ export class Field {
         reporter.newField(this);
     }
 
-    update(top: Field, right: Field, down: Field, left: Field) {
+    public update(top: Field, right: Field, down: Field, left: Field) {
         // Fire spread
         if (this.fire > 0.1) {
-            top.changes.push(function(self: Field) { self.fire += 0.01;});
-            right.changes.push(function(self: Field) { self.fire += 0.01;});
-            down.changes.push(function(self: Field) { self.fire += 0.01;});
-            left.changes.push(function(self: Field) { self.fire += 0.01;});
+            top.changes.push(function(self: Field) { self.fire += 0.01; });
+            right.changes.push(function(self: Field) { self.fire += 0.01; });
+            down.changes.push(function(self: Field) { self.fire += 0.01; });
+            left.changes.push(function(self: Field) { self.fire += 0.01; });
         }
 
         // Fire update
         if (this.fire > 0) {
-            this.changes.push(function(self: Field) { 
+            this.changes.push(function(self: Field) {
                 self.food -= self.fire * 0.1;
                 self.fire -= self.water * 0.1;
                 self.water -= self.fire * 0.1;
@@ -45,10 +44,10 @@ export class Field {
                 self.food *= 0.1;
             });
 
-            top.changes.push(function(self: Field) { self.food *= 0.01;});
-            right.changes.push(function(self: Field) { self.fire += 0.01;});
-            down.changes.push(function(self: Field) { self.fire += 0.01;});
-            left.changes.push(function(self: Field) { self.fire += 0.01;});
+            top.changes.push(function(self: Field) { self.food *= 0.01; });
+            right.changes.push(function(self: Field) { self.fire += 0.01; });
+            down.changes.push(function(self: Field) { self.fire += 0.01; });
+            left.changes.push(function(self: Field) { self.fire += 0.01; });
         }
 
         // Start a fire
@@ -59,10 +58,10 @@ export class Field {
         }
     }
 
-    bake() {
+    public bake() {
         const dtoField = new DTOField(this);
 
-        for(let change of this.changes) {
+        for (const change of this.changes) {
             change(this);
         }
 
@@ -72,7 +71,7 @@ export class Field {
         this.rocks = between(this.rocks);
 
         this.changes = [];
-        
+
         this.reporter.bake(this, dtoField);
     }
 }
