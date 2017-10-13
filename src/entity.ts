@@ -1,6 +1,6 @@
 import Victor = require("victor");
 
-export class Entity {
+export default class Entity {
     public health: number;
     public hunger: number;
     public speed: number;

@@ -1,8 +1,9 @@
-import {DTOField} from "./dto-field";
-import {Field} from "./field";
-import {World} from "./world";
+import DTOField from "../dto-field";
+import Field from "../field";
+import World from "../world";
+import IReporter from "./reporter";
 
-export class Reporter {
+export default class ConsoleReporter implements IReporter {
     public newWorld(world: World) {
         console.log(`New world ${world.id}.`);
     }
@@ -11,7 +12,7 @@ export class Reporter {
         console.log(`New field ${field.name()} created: food: ${field.food}, fire: ${field.fire}, water: ${field.water}, rocks: ${field.rocks}`);
     }
 
-    public bake(field: Field, dtoField: DTOField) {
+    public updateField(field: Field, dtoField: DTOField) {
         if (field.fire - dtoField.fire !== 0) {
             console.log(`Field ${field.name()} fire changed: ${field.fire - dtoField.fire}.`);
         }

@@ -1,6 +1,6 @@
-import {Field} from "./field";
+import Field from "./field";
 
-export class DTOField {
+export default class DTOField {
     public fire: number;
     public water: number;
     public food: number;
