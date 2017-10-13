@@ -28,6 +28,6 @@ export class World {
     }
 
     public bake() {
-        this.fields.forEach((field) => field.forEach(f => f.bake()));
+        this.fields.forEach((field) => field.forEach((f) => f.bake()));
     }
 }

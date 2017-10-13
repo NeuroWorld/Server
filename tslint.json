@@ -1,9 +1,17 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "no-console": false,
+    "only-arrow-functions": false,
+    "max-line-length": [
+      true,
+      180
     ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "no-empty": false
+  },
+  "rulesDirectory": []
 }
