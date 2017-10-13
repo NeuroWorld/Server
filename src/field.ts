@@ -9,7 +9,7 @@ export class Field {
     public fire: number;
     public changes: Array<(self: Field) => void>;
 
-    constructor(protected reporter: Reporter) {
+    constructor(public x: number, public y: number, protected reporter: Reporter) {
         this.food = Math.random();
         this.fire = Math.random() > 0.9 ? Math.random() : 0;
         this.water = Math.random();
@@ -19,9 +19,17 @@ export class Field {
         reporter.newField(this);
     }
 
+    /**
+     * todo: extract math somewhere else
+     * @param {Field} top
+     * @param {Field} right
+     * @param {Field} down
+     * @param {Field} left
+     */
     public update(top: Field, right: Field, down: Field, left: Field) {
         // Fire spread
         if (this.fire > 0.1) {
+            // todo: randomize and properly calculate fire spread
             top.changes.push(function(self: Field) { self.fire += 0.01; });
             right.changes.push(function(self: Field) { self.fire += 0.01; });
             down.changes.push(function(self: Field) { self.fire += 0.01; });
@@ -30,6 +38,7 @@ export class Field {
 
         // Fire update
         if (this.fire > 0) {
+            // todo: make fire behave nonlinearly
             this.changes.push(function(self: Field) {
                 self.food -= self.fire * 0.1;
                 self.fire -= self.water * 0.1;
@@ -45,9 +54,9 @@ export class Field {
             });
 
             top.changes.push(function(self: Field) { self.food *= 0.01; });
-            right.changes.push(function(self: Field) { self.fire += 0.01; });
-            down.changes.push(function(self: Field) { self.fire += 0.01; });
-            left.changes.push(function(self: Field) { self.fire += 0.01; });
+            right.changes.push(function(self: Field) { self.food *= 0.01; });
+            down.changes.push(function(self: Field) { self.food *= 0.01; });
+            left.changes.push(function(self: Field) { self.food *= 0.01; });
         }
 
         // Start a fire
@@ -56,6 +65,10 @@ export class Field {
                 self.fire = Math.random() > 0.9 ? Math.random() : 0;
             });
         }
+    }
+
+    public name(): string {
+        return `(${this.x} ${this.y})`;
     }
 
     public bake() {
