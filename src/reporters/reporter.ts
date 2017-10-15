@@ -1,4 +1,4 @@
-import DTOField from "../dto-field";
+import DTOField from "../dtos/dto-field";
 import Field from "../field";
 import World from "../world";
 

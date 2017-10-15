@@ -1,18 +1,24 @@
-import DTOField from "../dto-field";
+import DtoField from "../dtos/dto-field";
 import Field from "../field";
 import World from "../world";
 import IReporter from "./reporter";
+import Socket = SocketIO.Socket;
+import DtoFieldUpdate from "../dtos/dto-field-update";
 
 export default class SocketReporter implements IReporter {
+    constructor(protected client: Socket) {
+
+    }
+
     public newWorld(world: World) {
-        throw new Error("Method not implemented.");
+       this.client.emit("world-new", {arg: "arg2"});
     }
 
     public newField(field: Field) {
-        throw new Error("Method not implemented.");
+        this.client.emit("field-new", new DtoField(field));
     }
 
-    public updateField(field: Field, dtoField: DTOField) {
-        throw new Error("Method not implemented.");
+    public updateField(field: Field, dtoField: DtoField) {
+        this.client.emit("field-update", new DtoFieldUpdate(field, dtoField));
     }
 }

@@ -1,4 +1,4 @@
-import DTOField from "./dto-field";
+import DTOField from "./dtos/dto-field";
 import Reporter from "./reporters/reporter";
 import {between} from "./utils";
 
