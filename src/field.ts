@@ -65,7 +65,7 @@ export default class Field {
         // Regenerate food
         if (this.fire === 0) {
             this.changes.push(function(self: Field) {
-                self.food += Math.random() > 0.9 ? 0.1 * (1 - self.rocks) : 0;
+                self.food += Math.random() > 0.99 ? 0.1 * (1 - self.rocks) : 0;
             });
 
             top.changes.push((self: Field) => {self.food += this.food * 0.1; });
@@ -77,7 +77,7 @@ export default class Field {
         // Start a fire
         if (this.food > 1 && this.fire === 0) {
             this.changes.push(function(self: Field) {
-                self.fire = Math.random() > 0.9 ? Math.random() : 0;
+                self.fire = Math.random() > 0.997 ? Math.random() : 0;
             });
         }
     }
