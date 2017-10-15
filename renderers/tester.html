@@ -2,14 +2,14 @@
 <head>
   <style type="text/css">
     .game {
-      height: 300px;
-      width: 300px;
+      height: 500px;
+      width: 500px;
       background-color: purple;
     }
 
     .world {
-      height: 300px;
-      width: 300px;
+      height: 500px;
+      width: 500px;
       background-color: black;
       position: relative;
     }
@@ -30,8 +30,8 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
   $(document).ready(function() {
-    const fields = [];
-
+    const fields = {};
+    const fieldsArray = [];
 
     const socket = io('http://localhost:3030');
     socket.on("world-new", function(data) {
@@ -39,24 +39,18 @@
     });
 
     socket.on("field-new", function(data) {
-      fields.push(data);
-
+      fields[data.id] = data;
+      fieldsArray.push(data);
     });
 
-    socket.on("field-update", function(data) {
-      const f = fields.find(field => field.x === data.x && field.y === data.y);
-      if (data.fire) {
-        f.fire += data.fire;
-      }
-      if (data.water) {
-        f.water += data.water;
-      }
-      if (data.food) {
-        f.food += data.food;
-      }
-      if (data.stones) {
-        f.stones += data.stones;
-      }
+    socket.on("fields-update", function(data) {
+      data.forEach(field => {
+        const f = fields[field.id];
+        f.fire = field.fire;
+        f.water = field.water;
+        f.food = field.food;
+        f.stones = field.stones;
+      });
     });
 
     setInterval(function() {
@@ -66,7 +60,7 @@
     const app = new Vue({
       el: '.world',
       data: {
-        fields: fields,
+        fields: fieldsArray,
       }
     });
 
@@ -87,6 +81,9 @@
           if (fire === 0 && food === 0) {
             styles['background-color'] = 'grey';
           }
+          if (water > fire && water > food) {
+            styles['background-color'] = 'blue';
+          }
           return styles;
         },
       },
@@ -98,7 +95,7 @@
 
 <div class="game">
   <div class="world">
-    <game-field v-for="field in fields" :field="field"></game-field>
+    <game-field v-for="field in fields" :field="field" :key="field.id"></game-field>
   </div>
 </div>
 </body>

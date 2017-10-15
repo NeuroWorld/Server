@@ -1,0 +1,123 @@
+<html>
+<head>
+</head>
+<body>
+
+<script src="https://cdn.rawgit.com/konvajs/konva/1.7.2/konva.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+  $(document).ready(function() {
+    let worldSize = 20;
+    const stage = new Konva.Stage({
+      container: 'game',
+      width: 500,
+      height: 500
+    });
+
+    const layer = new Konva.Layer();
+    layer.on('click', function(e) {
+      const x = e.target.attrs.x / 10;
+      const y = e.target.attrs.y / 10;
+      console.log(fields[x * worldSize + y].attrs.raw);
+    });
+
+    // add the layer to the stage
+
+
+    const fields = {};
+
+    const socket = io('http://localhost:3030');
+    socket.on("world-new", function(data) {
+      worldSize = data.worldSize;
+      stage.add(layer);
+    });
+
+    socket.on("field-new", function(data) {
+      const rect = new Konva.Rect({
+        raw: data,
+        x: data.x * 10,
+        y: data.y * 10,
+        width: 10,
+        height: 10,
+        fill: fillFunction(data),
+      });
+
+      fields[data.id] = rect;
+
+      layer.add(rect);
+    });
+
+    socket.on("field-update", function(data) {
+      const rect = fields[data.id];
+
+      rect.fill(fillFunction(data));
+      layer.batchDraw();
+    });
+
+    socket.on("fields-update", function(data) {
+      data.forEach(field => {
+        const rect = fields[field.id];
+        rect.attrs.raw = field;
+        rect.fill(fillFunction(field));
+        layer.batchDraw();
+      });
+    });
+
+    setInterval(function() {
+      socket.emit("update");
+    }, 100);
+
+    function allSmaller(key, ...values) {
+      for (v in values) {
+        if (key < v) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function fillByLarges(data) {
+      const {fire, food, stones, water} = data;
+
+      if (allSmaller(fire, food, stones, water)) {
+        return 'red';
+      }
+
+      if (allSmaller(food, fire, stones, water)) {
+        return 'green';
+      }
+
+      if (allSmaller(stones, food, fire, water)) {
+        return 'grey';
+      }
+
+      if (allSmaller(water, stones, food, fire)) {
+        return 'blue';
+      }
+    }
+
+    function fillFunction(data) {
+      const {fire, food, stones, water} = data;
+
+      if (fire > 0) {
+        return 'red';
+      }
+      if (fire === 0 && food === 0) {
+        return 'grey';
+      }
+      if (water > fire && water > food) {
+        return 'blue';
+      }
+
+      return "green";
+    }
+  });
+</script>
+
+<div id="game">
+
+</div>
+</body>
+</html>
