@@ -15,10 +15,8 @@ export default class Web {
             const world = new World(reporter);
 
             client.on("update", () => {
-                console.log("Requested update.");
                 world.update();
                 world.bake();
-                console.log("Update completed.");
             });
 
             client.on("disconnect", () => {

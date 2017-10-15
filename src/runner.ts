@@ -1,6 +1,6 @@
+import {range} from "lodash";
 import Entity from "./entity";
 import Reporter from "./reporters/console-reporter";
-import {range} from "./utils";
 import World from "./world";
 
 export default class Runner {
@@ -19,7 +19,6 @@ export default class Runner {
         try {
             await new Promise(() => {
                 setInterval(() => {
-                    console.log("DSA");
                     this.world.update();
                     this.world.bake();
                 }, 1000);

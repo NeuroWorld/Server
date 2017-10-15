@@ -18,6 +18,9 @@ export default class SocketReporter implements IReporter {
     }
 
     public updateField(field: Field, dtoField: DtoField) {
-        this.client.emit("field-update", new DtoFieldUpdate(field, dtoField));
+        const update = new DtoFieldUpdate(field, dtoField);
+        if (update.isChanged) {
+            this.client.emit("field-update", new DtoFieldUpdate(field, dtoField));
+        }
     }
 }
