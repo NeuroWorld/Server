@@ -1,5 +1,4 @@
 import DtoField from "../dtos/dto-field";
-import DtoFieldUpdate from "../dtos/dto-field-update";
 import Field from "../field";
 import World from "../world";
 import IReporter from "./reporter";

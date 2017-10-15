@@ -1,3 +1,3 @@
 export namespace Properties {
-    export const WORLD_SIZE: number = 30;
+    export const WORLD_SIZE: number = 20;
 }
