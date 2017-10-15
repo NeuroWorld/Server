@@ -30,8 +30,8 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
   $(document).ready(function() {
-    const fields = [];
-
+    const fields = {};
+    const fieldsArray = [];
 
     const socket = io('http://localhost:3030');
     socket.on("world-new", function(data) {
@@ -39,24 +39,16 @@
     });
 
     socket.on("field-new", function(data) {
-      fields.push(data);
-
+      fields[data.id] = data;
+      fieldsArray.push(data);
     });
 
     socket.on("field-update", function(data) {
-      const f = fields.find(field => field.x === data.x && field.y === data.y);
-      if (data.fire) {
-        f.fire += data.fire;
-      }
-      if (data.water) {
-        f.water += data.water;
-      }
-      if (data.food) {
-        f.food += data.food;
-      }
-      if (data.stones) {
-        f.stones += data.stones;
-      }
+      const f = fields[data.id];
+      f.fire = data.fire;
+      f.water = data.water;
+      f.food = data.food;
+      f.stones = data.stones;
     });
 
     setInterval(function() {
@@ -66,7 +58,7 @@
     const app = new Vue({
       el: '.world',
       data: {
-        fields: fields,
+        fields: fieldsArray,
       }
     });
 
@@ -86,6 +78,9 @@
           }
           if (fire === 0 && food === 0) {
             styles['background-color'] = 'grey';
+          }
+          if (water > fire && water > food) {
+            styles['background-color'] = 'blue';
           }
           return styles;
         },

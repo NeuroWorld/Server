@@ -7,8 +7,10 @@ export default class DtoField {
     public rocks: number;
     public x: number;
     public y: number;
+    public id: number;
 
     constructor(field: Field) {
+        this.id = field.id;
         this.x = field.x;
         this.y = field.y;
         this.fire = field.fire;

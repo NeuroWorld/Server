@@ -1,5 +1,7 @@
 import Field from "./field";
+import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
+import WORLD_SIZE = Properties.WORLD_SIZE;
 
 export default class World {
     public id: number;
@@ -10,10 +12,9 @@ export default class World {
         this.id = Math.ceil(Math.random() * 10000);
         this.fields = [];
 
-        // todo: extract 100 to global const
-        for (let i = 0; i < 30; ++i) {
+        for (let i = 0; i < WORLD_SIZE; ++i) {
             this.fields[i] = [];
-            for (let j = 0; j < 30; ++j) {
+            for (let j = 0; j < WORLD_SIZE; ++j) {
                 this.fields[i][j] = new Field(i, j, reporter);
             }
         }
@@ -22,14 +23,17 @@ export default class World {
     }
 
     public update() {
-        // todo: make world overlap
-        for (let i = 1; i < 29; ++i) {
-            for (let j = 1; j < 29; ++j) {
+        const p = WORLD_SIZE + 1;
+        const m = WORLD_SIZE - 1;
+        const s = WORLD_SIZE;
+
+        for (let i = 0; i < WORLD_SIZE; ++i) {
+            for (let j = 0; j < WORLD_SIZE; ++j) {
                 this.fields[i][j].update(
-                    this.fields[i + 1][j],
-                    this.fields[i][j + 1],
-                    this.fields[i - 1][j],
-                    this.fields[i][j - 1],
+                    this.fields[i][(j + p) % s],
+                    this.fields[(i + p) % s][j],
+                    this.fields[i][(j + m) % s],
+                    this.fields[(i + m) % s][j],
                 );
             }
         }

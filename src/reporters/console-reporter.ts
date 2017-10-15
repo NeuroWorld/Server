@@ -12,21 +12,10 @@ export default class ConsoleReporter implements IReporter {
         console.log(`New field ${field.name()} created: food: ${field.food}, fire: ${field.fire}, water: ${field.water}, rocks: ${field.rocks}`);
     }
 
-    public updateField(field: Field, dtoField: DtoField) {
-        if (field.fire - dtoField.fire !== 0) {
-            console.log(`Field ${field.name()} fire changed: ${field.fire - dtoField.fire}.`);
-        }
-
-        if (field.water - dtoField.water !== 0) {
-            console.log(`Field ${field.name()} water changed: ${field.water - dtoField.water}.`);
-        }
-
-        if (field.rocks - dtoField.rocks !== 0) {
-            console.log(`Field ${field.name()} rocks changed: ${field.rocks - dtoField.rocks}.`);
-        }
-
-        if (field.food - dtoField.food !== 0) {
-            console.log(`Field ${field.name()} food changed: ${field.food - dtoField.food}.`);
-        }
+    public updateField(field: Field) {
+        console.log(`Field ${field.name()} fire has new value: ${field.fire}.`);
+        console.log(`Field ${field.name()} water has new value: ${field.water}.`);
+        console.log(`Field ${field.name()} rocks has new value: ${field.rocks}.`);
+        console.log(`Field ${field.name()} food has new value: ${field.food}.`);
     }
 }

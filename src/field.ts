@@ -1,18 +1,22 @@
 import {clamp, round} from "lodash";
 import DtoField from "./dtos/dto-field";
+import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
 import {between} from "./utils";
+import WORLD_SIZE = Properties.WORLD_SIZE;
 
 export default class Field {
     public food: number;
     public water: number;
     public rocks: number;
     public fire: number;
+    public id: number;
     public changes: Array<(self: Field) => void>;
 
     constructor(public x: number, public y: number, protected reporter: Reporter) {
-        this.food = Math.random();
-        this.fire = Math.random() > 0.9 ? Math.random() : 0;
+        this.id = x * WORLD_SIZE + y;
+        this.food = Math.random() * 100;
+        this.fire = 0;
         this.water = Math.random();
         this.rocks = Math.random();
         this.changes = [];
@@ -29,19 +33,19 @@ export default class Field {
      */
     public update(top: Field, right: Field, down: Field, left: Field) {
         // Fire spread
-        if (this.fire > 0.1 && this.food > 0) {
+        if (this.fire > 0.1 && this.food ) {
             // todo: randomize and properly calculate fire spread
             top.changes.push((self: Field) => {
-                if (self.food > 0) {self.fire += 0.1 * this.fire; }
+                if (self.food > 0.1) {self.fire += 0.1 * this.fire; }
             });
             right.changes.push((self: Field) => {
-                if (self.food > 0) {self.fire += 0.1 * this.fire; }
+                if (self.food > 0.1) {self.fire += 0.1 * this.fire; }
             });
             down.changes.push((self: Field) => {
-                if (self.food > 0) {self.fire += 0.1 * this.fire; }
+                if (self.food > 0.1) {self.fire += 0.1 * this.fire; }
             });
             left.changes.push((self: Field) => {
-                if (self.food > 0) {self.fire += 0.1 * this.fire; }
+                if (self.food > 0.1) {self.fire += 0.1 * this.fire; }
             });
         }
 
@@ -50,6 +54,7 @@ export default class Field {
             // todo: make fire behave nonlinearly
             this.changes.push(function(self: Field) {
                 self.food -= self.fire * 0.1;
+                self.fire *= 1.01;
                 self.fire -= self.water * 0.1;
                 self.water -= self.fire * 0.1;
             });
@@ -68,18 +73,18 @@ export default class Field {
                 self.food += Math.random() > 0.99 ? 0.1 * (1 - self.rocks) : 0;
             });
 
-            top.changes.push((self: Field) => {self.food += this.food * 0.1; });
-            right.changes.push((self: Field) => {self.food += this.food * 0.1; });
-            down.changes.push((self: Field) => {self.food += this.food * 0.1; });
-            left.changes.push((self: Field) => {self.food += this.food * 0.1; });
+            top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            right.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            down.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            left.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
         }
 
         // Start a fire
-        if (this.food > 1 && this.fire === 0) {
-            this.changes.push(function(self: Field) {
-                self.fire = Math.random() > 0.997 ? Math.random() : 0;
-            });
-        }
+        this.changes.push(function(self: Field) {
+            if (self.fire === 0 && self.food > 1) {
+                self.fire = Math.random() > 0.999 ? Math.random() : 0;
+            }
+        });
     }
 
     public name(): string {
@@ -87,7 +92,7 @@ export default class Field {
     }
 
     public bake() {
-        const dtoField = new DtoField(this);
+        const notify = this.changes.length > 0;
 
         for (const change of this.changes) {
             change(this);
@@ -100,6 +105,8 @@ export default class Field {
 
         this.changes = [];
 
-        this.reporter.updateField(this, dtoField);
+        if (notify) {
+            this.reporter.updateField(this);
+        }
     }
 }
