@@ -82,17 +82,13 @@ export default class Field {
         // Start a fire
         this.changes.push(function(self: Field) {
             if (self.fire === 0 && self.food > 1) {
-                self.fire = Math.random() > 0.999 ? Math.random() : 0;
+                self.fire = Math.random() > 0.99 ? Math.random() : 0;
             }
         });
     }
 
-    public name(): string {
-        return `(${this.x} ${this.y})`;
-    }
-
     public bake() {
-        const notify = this.changes.length > 0;
+        const old = new DtoField(this);
 
         for (const change of this.changes) {
             change(this);
@@ -103,10 +99,14 @@ export default class Field {
         this.water = round(between(this.water), 2);
         this.rocks = round(between(this.rocks), 2);
 
+        if (this.fire < 0.1 || this.food < 0.1) {
+            this.fire = 0;
+        }
+
         this.changes = [];
 
-        if (notify) {
-            this.reporter.updateField(this);
+        if (old.fire !== this.fire || old.water !== this.water || old.food !== this.food || old.rocks !== this.rocks) {
+            return new DtoField(this);
         }
     }
 }

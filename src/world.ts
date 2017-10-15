@@ -1,3 +1,4 @@
+import DtoField from "./dtos/dto-field";
 import Field from "./field";
 import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
@@ -40,6 +41,15 @@ export default class World {
     }
 
     public bake() {
-        this.fields.forEach((field) => field.forEach((f) => f.bake()));
+        const dtoFields: DtoField[] = [];
+
+        this.fields.forEach((field) => field.forEach((f) => {
+            const dtoField = f.bake();
+            if (dtoField) {
+                dtoFields.push(dtoField);
+            }
+        }));
+
+        this.reporter.updateFields(dtoFields);
     }
 }

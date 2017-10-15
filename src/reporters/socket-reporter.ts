@@ -1,15 +1,17 @@
 import DtoField from "../dtos/dto-field";
 import Field from "../field";
+import {Properties} from "../properties";
 import World from "../world";
 import IReporter from "./reporter";
 import Socket = SocketIO.Socket;
+import WORLD_SIZE = Properties.WORLD_SIZE;
 
 export default class SocketReporter implements IReporter {
     constructor(protected client: Socket) {
     }
 
     public newWorld(world: World) {
-       this.client.emit("world-new", {arg: "arg2"});
+        this.client.emit("world-new", {worldSize: WORLD_SIZE});
     }
 
     public newField(field: Field) {
@@ -18,5 +20,9 @@ export default class SocketReporter implements IReporter {
 
     public updateField(field: Field) {
         this.client.emit("field-update", new DtoField(field));
+    }
+
+    public updateFields(fields: DtoField[]) {
+        this.client.emit("fields-update", fields);
     }
 }

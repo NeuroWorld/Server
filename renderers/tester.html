@@ -43,12 +43,14 @@
       fieldsArray.push(data);
     });
 
-    socket.on("field-update", function(data) {
-      const f = fields[data.id];
-      f.fire = data.fire;
-      f.water = data.water;
-      f.food = data.food;
-      f.stones = data.stones;
+    socket.on("fields-update", function(data) {
+      data.forEach(field => {
+        const f = fields[field.id];
+        f.fire = field.fire;
+        f.water = field.water;
+        f.food = field.food;
+        f.stones = field.stones;
+      });
     });
 
     setInterval(function() {
