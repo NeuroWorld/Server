@@ -1,3 +1,3 @@
-export class Input {
+export default class Input {
 
 }

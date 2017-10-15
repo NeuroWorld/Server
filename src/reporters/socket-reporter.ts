@@ -1,13 +1,12 @@
 import DtoField from "../dtos/dto-field";
+import DtoFieldUpdate from "../dtos/dto-field-update";
 import Field from "../field";
 import World from "../world";
 import IReporter from "./reporter";
 import Socket = SocketIO.Socket;
-import DtoFieldUpdate from "../dtos/dto-field-update";
 
 export default class SocketReporter implements IReporter {
     constructor(protected client: Socket) {
-
     }
 
     public newWorld(world: World) {

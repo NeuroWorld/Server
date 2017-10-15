@@ -1,4 +1,4 @@
-import DTOField from "./dtos/dto-field";
+import DtoField from "./dtos/dto-field";
 import Reporter from "./reporters/reporter";
 import {between} from "./utils";
 
@@ -72,7 +72,7 @@ export default class Field {
     }
 
     public bake() {
-        const dtoField = new DTOField(this);
+        const dtoField = new DtoField(this);
 
         for (const change of this.changes) {
             change(this);

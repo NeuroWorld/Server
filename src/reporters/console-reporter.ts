@@ -1,4 +1,4 @@
-import DTOField from "../dtos/dto-field";
+import DtoField from "../dtos/dto-field";
 import Field from "../field";
 import World from "../world";
 import IReporter from "./reporter";
@@ -12,7 +12,7 @@ export default class ConsoleReporter implements IReporter {
         console.log(`New field ${field.name()} created: food: ${field.food}, fire: ${field.fire}, water: ${field.water}, rocks: ${field.rocks}`);
     }
 
-    public updateField(field: Field, dtoField: DTOField) {
+    public updateField(field: Field, dtoField: DtoField) {
         if (field.fire - dtoField.fire !== 0) {
             console.log(`Field ${field.name()} fire changed: ${field.fire - dtoField.fire}.`);
         }

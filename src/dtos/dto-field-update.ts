@@ -1,5 +1,5 @@
-import DtoField from "./dto-field";
 import Field from "../field";
+import DtoField from "./dto-field";
 
 export default class DtoFieldUpdate {
     public food;
