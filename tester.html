@@ -1,0 +1,24 @@
+<html>
+  <head></head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script>
+      const socket = io('http://localhost:3030');
+      socket.on("world-new", function(data) {
+        console.log("new world", data);
+      });
+
+      socket.on("field-new", function(data) {
+        console.log("new field", data);
+      });
+
+      socket.on("field-update", function(data) {
+        console.log("updated field", data);
+      });
+
+      setInterval(function () {
+        socket.emit("update");
+      }, 5000);
+    </script>
+  </body>
+</html>

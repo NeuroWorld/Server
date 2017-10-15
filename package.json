@@ -13,7 +13,9 @@
     "lint-fix": "tslint -p . -c tslint.json --fix"
   },
   "dependencies": {
+    "@types/socket.io": "^1.4.31",
     "@types/victor": "^1.1.0",
+    "socket.io": "2.0.3",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3",
     "victor": "^1.1.0"

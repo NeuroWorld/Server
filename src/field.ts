@@ -1,8 +1,8 @@
-import {DTOField} from "./dto-field";
-import {Reporter} from "./reporter";
+import DtoField from "./dtos/dto-field";
+import Reporter from "./reporters/reporter";
 import {between} from "./utils";
 
-export class Field {
+export default class Field {
     public food: number;
     public water: number;
     public rocks: number;
@@ -72,7 +72,7 @@ export class Field {
     }
 
     public bake() {
-        const dtoField = new DTOField(this);
+        const dtoField = new DtoField(this);
 
         for (const change of this.changes) {
             change(this);
@@ -85,6 +85,6 @@ export class Field {
 
         this.changes = [];
 
-        this.reporter.bake(this, dtoField);
+        this.reporter.updateField(this, dtoField);
     }
 }

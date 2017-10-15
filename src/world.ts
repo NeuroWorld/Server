@@ -1,7 +1,7 @@
-import {Field} from "./field";
-import {Reporter} from "./reporter";
+import Field from "./field";
+import Reporter from "./reporters/reporter";
 
-export class World {
+export default class World {
     public id: number;
     protected fields: Field[][];
 
