@@ -8,6 +8,7 @@ export default class DtoFieldUpdate {
     public fire;
     public x;
     public y;
+    public isChanged = false;
 
     constructor(current: Field, old: DtoField) {
         this.setIfNotNull(current, old, "fire");
@@ -20,8 +21,9 @@ export default class DtoFieldUpdate {
     }
 
     protected setIfNotNull(current: Field, old: DtoField, field: string) {
-        if (old[field] - current[field]) {
-            this[field] = old[field] - current[field];
+        if (current[field] - old[field]) {
+            this[field] = current[field] - old[field];
+            this.isChanged = true;
         }
     }
 }

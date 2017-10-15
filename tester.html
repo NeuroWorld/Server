@@ -1,24 +1,105 @@
 <html>
-  <head></head>
-  <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-    <script>
-      const socket = io('http://localhost:3030');
-      socket.on("world-new", function(data) {
-        console.log("new world", data);
-      });
+<head>
+  <style type="text/css">
+    .game {
+      height: 300px;
+      width: 300px;
+      background-color: purple;
+    }
 
-      socket.on("field-new", function(data) {
-        console.log("new field", data);
-      });
+    .world {
+      height: 300px;
+      width: 300px;
+      background-color: black;
+      position: relative;
+    }
 
-      socket.on("field-update", function(data) {
-        console.log("updated field", data);
-      });
+    .field {
+      background-color: green;
+      position: absolute;
+      height: 10px;
+      width: 10px;
+    }
+  </style>
+</head>
+<body>
 
-      setInterval(function () {
-        socket.emit("update");
-      }, 5000);
-    </script>
-  </body>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+  $(document).ready(function() {
+    const fields = [];
+
+
+    const socket = io('http://localhost:3030');
+    socket.on("world-new", function(data) {
+      console.log("new world", data);
+    });
+
+    socket.on("field-new", function(data) {
+      fields.push(data);
+
+    });
+
+    socket.on("field-update", function(data) {
+      const f = fields.find(field => field.x === data.x && field.y === data.y);
+      if (data.fire) {
+        f.fire += data.fire;
+      }
+      if (data.water) {
+        f.water += data.water;
+      }
+      if (data.food) {
+        f.food += data.food;
+      }
+      if (data.stones) {
+        f.stones += data.stones;
+      }
+    });
+
+    setInterval(function() {
+      socket.emit("update");
+    }, 200);
+
+    const app = new Vue({
+      el: '.world',
+      data: {
+        fields: fields,
+      }
+    });
+
+    Vue.component('game-field', {
+      props: ['field'],
+      template: '<div class="field" v-bind:style="styles"></div>',
+      computed: {
+        description: function() {
+          const {x, y, fire, food, stones, water} = this.field;
+          return `F: ${_.round(food, 2)}, O: ${_.round(fire, 2)}`;
+        },
+        styles: function() {
+          const {x, y, fire, food, stones, water} = this.field;
+          const styles = {left: x * 10 + 'px', top: y * 10 + 'px'};
+          if (fire > 0) {
+            styles['background-color'] = 'red';
+          }
+          if (fire === 0 && food === 0) {
+            styles['background-color'] = 'grey';
+          }
+          return styles;
+        },
+      },
+    });
+  });
+
+
+</script>
+
+<div class="game">
+  <div class="world">
+    <game-field v-for="field in fields" :field="field"></game-field>
+  </div>
+</div>
+</body>
 </html>
