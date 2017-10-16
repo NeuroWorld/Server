@@ -4,6 +4,8 @@ import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
 import {between} from "./utils";
 import WORLD_SIZE = Properties.WORLD_SIZE;
+import FIRE_CHANCE = Properties.FIRE_CHANCE;
+import FOOD_CHANCE = Properties.FOOD_CHANCE;
 
 export default class Field {
     public food: number;
@@ -70,7 +72,7 @@ export default class Field {
         // Regenerate food
         if (this.fire === 0) {
             this.changes.push(function(self: Field) {
-                self.food += Math.random() > 0.99 ? 0.1 * (1 - self.rocks) : 0;
+                self.food += Math.random() > FOOD_CHANCE ? 0.1 * (1 - self.rocks) : 0;
             });
 
             top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
@@ -82,7 +84,7 @@ export default class Field {
         // Start a fire
         this.changes.push(function(self: Field) {
             if (self.fire === 0 && self.food > 1) {
-                self.fire = Math.random() > 0.99 ? Math.random() : 0;
+                self.fire = Math.random() > FIRE_CHANCE ? Math.random() : 0;
             }
         });
     }

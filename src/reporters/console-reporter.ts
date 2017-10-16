@@ -1,11 +1,24 @@
+import DtoEntity from "../dtos/dto-entity";
 import DtoField from "../dtos/dto-field";
 import Field from "../field";
 import World from "../world";
 import IReporter from "./reporter";
 
 export default class ConsoleReporter implements IReporter {
+    public updateEntities(entities: DtoEntity[]) {
+        entities.forEach((entity) => {
+            console.log(`Updated entity ${entity.id}.`);
+        });
+    }
+
     public newWorld(world: World) {
         console.log(`New world ${world.id}.`);
+    }
+
+    public newEntities(entities: DtoEntity[]) {
+        entities.forEach((entity) => {
+            console.log(`New entity ${entity.id}.`);
+        });
     }
 
     public newField(field: Field) {
