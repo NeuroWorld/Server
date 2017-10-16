@@ -24,7 +24,7 @@ export default class Entity {
     }
 
     public move() {
-        this.position = this.position.add(this.direction.multiplyScalar(ENTITY_SPEED));
+        this.position.add(this.direction.clone().multiplyScalar(ENTITY_SPEED));
         this.position.x = (this.position.x + WORLD_SIZE) % WORLD_SIZE;
         this.position.y = (this.position.y + WORLD_SIZE) % WORLD_SIZE;
     }
