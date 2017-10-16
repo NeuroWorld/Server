@@ -35,9 +35,8 @@ export default class World {
     }
 
     public update() {
-        this.updateEntities();
-
         this.buildFields();
+        this.updateEntities();
         this.bakeFields();
     }
 

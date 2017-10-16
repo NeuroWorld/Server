@@ -1,3 +1,4 @@
+import {range} from "lodash";
 import Victor = require("victor");
 import Field from "./field";
 import {Properties} from "./properties";
@@ -17,8 +18,14 @@ export default class Entity {
         this.direction = new Victor(Math.random() - 0.5, Math.random() - 0.5).normalize();
     }
 
-    public update(self: Field, top: Field, right: Field, down: Field, left: Field) {
-        self.food = 0;
+    public update(under: Field, top: Field, right: Field, down: Field, left: Field) {
+        range(arguments.length).forEach((i) => {
+            arguments[i].changes.push(function(self: Field) {
+                self.water += self.food;
+                self.food = 0;
+            });
+        });
+
         this.move();
         this.turn();
     }

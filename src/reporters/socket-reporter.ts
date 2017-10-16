@@ -24,7 +24,9 @@ export default class SocketReporter implements IReporter {
     }
 
     public updateEntities(entities: DtoEntity[]) {
-        this.client.emit("entities-update", entities);
+        if (entities.length > 0) {
+            this.client.emit("entities-update", entities);
+        }
     }
 
     public updateField(field: Field) {
@@ -32,6 +34,8 @@ export default class SocketReporter implements IReporter {
     }
 
     public updateFields(fields: DtoField[]) {
-        this.client.emit("fields-update", fields);
+        if (fields.length > 0) {
+            this.client.emit("fields-update", fields);
+        }
     }
 }
