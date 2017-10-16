@@ -1,3 +1,4 @@
+import {range} from "lodash";
 import DtoEntity from "./dtos/dto-entity";
 import DtoField from "./dtos/dto-field";
 import Entity from "./entity";
@@ -27,9 +28,7 @@ export default class World {
             }
         }
 
-        for (let i = 0; i < ENTITY_COUNT; ++i) {
-            this.entities[i] = new Entity(i);
-        }
+        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i));
 
         this.reporter.newWorld(this);
         this.reporter.newEntities(this.entities.map((e) => new DtoEntity(e)));
