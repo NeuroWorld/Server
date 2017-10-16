@@ -18,9 +18,13 @@
       height: 700,
     });
 
-    const layer = new Konva.Layer();
+    const worldLayer = new Konva.Layer();
+    const entitiesLayer = new Konva.Layer();
 
-    layer.on('click', function(e) {
+    stage.add(worldLayer);
+    stage.add(entitiesLayer);
+
+    worldLayer.on('click', function(e) {
       const x = e.target.attrs.x / 10;
       const y = e.target.attrs.y / 10;
       console.log(fields[x * worldSize + y].attrs.raw);
@@ -35,7 +39,6 @@
     const socket = io('http://localhost:3030');
     socket.on("world-new", function(data) {
       worldSize = data.worldSize;
-      stage.add(layer);
     });
 
     socket.on("field-new", function(data) {
@@ -50,13 +53,14 @@
 
       fields[data.id] = rect;
 
-      layer.add(rect);
+      worldLayer.add(rect);
     });
 
     socket.on("field-update", function(data) {
       const rect = fields[data.id];
 
       rect.fill(fillFunction(data));
+      rect.draw();
     });
 
     socket.on("entities-new", function(data) {
@@ -70,7 +74,7 @@
 
         entities[entity.id] = circle;
 
-        layer.add(circle);
+        entitiesLayer.add(circle);
       });
     });
 
@@ -80,7 +84,7 @@
         circle.setX(entity.position[0] * 10);
         circle.setY(entity.position[1] * 10);
       });
-      layer.batchDraw();
+      entitiesLayer.batchDraw();
     });
 
     socket.on("fields-update", function(data) {
@@ -88,8 +92,8 @@
         const rect = fields[field.id];
         rect.attrs.raw = field;
         rect.fill(fillFunction(field));
+        rect.draw();
       });
-      layer.batchDraw();
     });
 
     setInterval(function() {
@@ -131,7 +135,7 @@
       if (fire > 0) {
         return 'red';
       }
-      if (fire === 0 && food === 0) {
+      if (fire === 0 && food === 0 && water === 0) {
         return 'grey';
       }
       if (water > fire && water > food) {
