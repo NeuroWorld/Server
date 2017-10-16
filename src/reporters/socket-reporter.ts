@@ -1,3 +1,4 @@
+import DtoEntity from "../dtos/dto-entity";
 import DtoField from "../dtos/dto-field";
 import Field from "../field";
 import {Properties} from "../properties";
@@ -16,6 +17,14 @@ export default class SocketReporter implements IReporter {
 
     public newField(field: Field) {
         this.client.emit("field-new", new DtoField(field));
+    }
+
+    public newEntities(entities: DtoEntity[]) {
+        this.client.emit("entities-new", entities);
+    }
+
+    public updateEntities(entities: DtoEntity[]) {
+        this.client.emit("entities-update", entities);
     }
 
     public updateField(field: Field) {

@@ -10,13 +10,16 @@
 <script>
   $(document).ready(function() {
     let worldSize = 20;
+    let iteration = 0;
+
     const stage = new Konva.Stage({
       container: 'game',
-      width: 500,
-      height: 500
+      width: 700,
+      height: 700,
     });
 
     const layer = new Konva.Layer();
+
     layer.on('click', function(e) {
       const x = e.target.attrs.x / 10;
       const y = e.target.attrs.y / 10;
@@ -27,6 +30,7 @@
 
 
     const fields = {};
+    const entities = {};
 
     const socket = io('http://localhost:3030');
     socket.on("world-new", function(data) {
@@ -53,6 +57,29 @@
       const rect = fields[data.id];
 
       rect.fill(fillFunction(data));
+    });
+
+    socket.on("entities-new", function(data) {
+      data.forEach(function(entity) {
+        const circle = new Konva.Circle({
+          x: entity.position[0] * 10,
+          y: entity.position[1] * 10,
+          radius: 4,
+          fill: "orange",
+        });
+
+        entities[entity.id] = circle;
+
+        layer.add(circle);
+      });
+    });
+
+    socket.on("entities-update", function(data) {
+      data.forEach(entity => {
+        const circle = entities[entity.id];
+        circle.setX(entity.position[0] * 10);
+        circle.setY(entity.position[1] * 10);
+      });
       layer.batchDraw();
     });
 
@@ -61,8 +88,8 @@
         const rect = fields[field.id];
         rect.attrs.raw = field;
         rect.fill(fillFunction(field));
-        layer.batchDraw();
       });
+      layer.batchDraw();
     });
 
     setInterval(function() {

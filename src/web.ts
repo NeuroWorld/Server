@@ -16,7 +16,6 @@ export default class Web {
 
             client.on("update", () => {
                 world.update();
-                world.bake();
             });
 
             client.on("disconnect", () => {
