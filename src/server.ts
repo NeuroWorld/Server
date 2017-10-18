@@ -22,9 +22,9 @@ function progress(brains: Brain[], inputs: number[]) {
     const results = brains
         .map((brain) => brain.think(inputs))
         .map((result, index) => new Result(lSum(result), index))
-        .sort((a, b) => Math.sign(b.sum - a.sum));
+        .sort((a, b) => Math.sign(+(a.sum - b.sum)));
 
-    const winners = results.slice(results.length - 5, 1);
+    const winners = results.slice(results.length - 5, results.length);
     winners.push(results[mathjs.randomInt(results.length - 5)]);
     winners.push(results[mathjs.randomInt(results.length - 5)]);
     winners.push(results[mathjs.randomInt(results.length - 5)]);

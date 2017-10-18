@@ -10,7 +10,7 @@ export default class Brain {
 
     protected biases;
 
-    protected mutability = 1;
+    protected mutability = 10000;
 
     public constructor(protected height: number, protected layers: number) {
     }
@@ -22,14 +22,14 @@ export default class Brain {
 
     public mutate(): Brain {
         const brain = new Brain(this.height, this.layers);
-        // brain.mutability = this.mutability / 2;
+        brain.mutability = this.mutability / 2;
         brain.weights = mathjs.clone(this.weights);
         brain.biases = mathjs.clone(this.biases);
         for (let i = 0; i < brain.weights.length; ++i) {
             for (let j = 0; j < brain.weights[i].length; ++j) {
-                brain.biases[i][j] *= this.mutability * mathjs.random(-1, 1);
+                brain.biases[i][j] += this.mutability * mathjs.random(-1, 1);
                 for (let k = 0; k < brain.weights[i][j].length; ++k) {
-                    brain.weights[i][j][k] *= this.mutability * mathjs.random(-1, 1);
+                    brain.weights[i][j][k] += this.mutability * mathjs.random(-1, 1);
                 }
             }
         }
