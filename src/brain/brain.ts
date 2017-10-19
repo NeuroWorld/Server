@@ -1,4 +1,6 @@
 import mathjs = require("mathjs");
+import {Properties} from "../properties";
+import BRAIN_MUTABILITY = Properties.BRAIN_MUTABILITY;
 
 export default class Brain {
 
@@ -10,9 +12,10 @@ export default class Brain {
 
     protected biases;
 
-    protected mutability = 10000;
+    protected mutability;
 
     public constructor(protected height: number, protected layers: number) {
+        this.mutability = BRAIN_MUTABILITY;
     }
 
     public randomize(): void {
@@ -22,17 +25,12 @@ export default class Brain {
 
     public mutate(): Brain {
         const brain = new Brain(this.height, this.layers);
-        brain.mutability = this.mutability / 2;
+
+        brain.mutability = this.mutability * 0.99;
         brain.weights = mathjs.clone(this.weights);
         brain.biases = mathjs.clone(this.biases);
-        for (let i = 0; i < brain.weights.length; ++i) {
-            for (let j = 0; j < brain.weights[i].length; ++j) {
-                brain.biases[i][j] += this.mutability * mathjs.random(-1, 1);
-                for (let k = 0; k < brain.weights[i][j].length; ++k) {
-                    brain.weights[i][j][k] += this.mutability * mathjs.random(-1, 1);
-                }
-            }
-        }
+        brain.mutateProperties();
+
         return brain;
     }
 
@@ -52,5 +50,16 @@ export default class Brain {
         }
 
         return outputs;
+    }
+
+    protected mutateProperties() {
+        for (let i = 0; i < this.weights.length; ++i) {
+            for (let j = 0; j < this.weights[i].length; ++j) {
+                this.biases[i][j] += this.mutability * mathjs.random(-0.5, 0.5);
+                for (let k = 0; k < this.weights[i][j].length; ++k) {
+                    this.weights[i][j][k] += this.mutability * mathjs.random(-0.5, 0.5);
+                }
+            }
+        }
     }
 }

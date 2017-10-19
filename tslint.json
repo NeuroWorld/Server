@@ -12,7 +12,8 @@
       180
     ],
     "no-empty": false,
-    "no-namespace": false
+    "no-namespace": false,
+    "max-classes-per-file": [false]
   },
   "rulesDirectory": []
 }
