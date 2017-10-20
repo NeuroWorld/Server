@@ -20,12 +20,12 @@ export default class SocketReporter implements IReporter {
     }
 
     public newEntities(entities: DtoEntity[]) {
-        this.client.emit("entities-new", entities);
+        this.client.emit("entities", entities);
     }
 
     public updateEntities(entities: DtoEntity[]) {
         if (entities.length > 0) {
-            this.client.emit("entities-update", entities);
+            this.client.emit("entities", entities);
         }
     }
 

@@ -14,8 +14,12 @@ export default class Brain {
 
     protected mutability;
 
-    public constructor(protected height: number, protected layers: number) {
+    public constructor(protected height: number, protected layers: number, randomize: boolean = true) {
         this.mutability = BRAIN_MUTABILITY;
+
+        if (randomize) {
+            this.randomize();
+        }
     }
 
     public randomize(): void {
@@ -24,7 +28,7 @@ export default class Brain {
     }
 
     public mutate(): Brain {
-        const brain = new Brain(this.height, this.layers);
+        const brain = new Brain(this.height, this.layers, false);
 
         brain.mutability = this.mutability * 0.99;
         brain.weights = mathjs.clone(this.weights);

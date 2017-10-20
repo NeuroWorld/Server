@@ -13,14 +13,14 @@
     "lint-fix": "tslint -p . -c tslint.json --fix"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.77",
+    "@types/lodash": "^4.14.78",
     "@types/mathjs": "^0.0.35",
     "@types/socket.io": "^1.4.31",
     "@types/victor": "^1.1.0",
     "lodash": "^4.17.4",
     "mathjs": "^3.16.5",
     "socket.io": "2.0.3",
-    "tslint": "^5.7.0",
+    "tslint": "^5.8.0",
     "typescript": "^2.5.3",
     "victor": "^1.1.0"
   }

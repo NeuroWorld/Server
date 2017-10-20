@@ -6,6 +6,7 @@ export default class DtoEntity {
     public hunger: number;
     public direction: [number, number];
     public position: [number, number];
+    public isDead: boolean;
 
     constructor(entity: Entity) {
         this.id = entity.id;
@@ -13,5 +14,6 @@ export default class DtoEntity {
         this.hunger = entity.hunger;
         this.direction = [entity.direction.x, entity.direction.y];
         this.position = [entity.position.x, entity.position.y];
+        this.isDead = entity.isDead;
     }
 }

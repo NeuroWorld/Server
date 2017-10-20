@@ -1,4 +1,4 @@
-import {clamp, round} from "lodash";
+import {round} from "lodash";
 import DtoField from "./dtos/dto-field";
 import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
@@ -17,7 +17,7 @@ export default class Field {
 
     constructor(public x: number, public y: number, protected reporter: Reporter) {
         this.id = x * WORLD_SIZE + y;
-        this.food = Math.random() * 100;
+        this.food = Math.random() * 1;
         this.fire = 0;
         this.water = Math.random();
         this.rocks = Math.random();
@@ -35,7 +35,7 @@ export default class Field {
      */
     public update(top: Field, right: Field, down: Field, left: Field) {
         // Fire spread
-        if (this.fire > 0.1 && this.food ) {
+        if (this.fire > 0.1 && this.food && Math.random() > 0.5 ) {
             // todo: randomize and properly calculate fire spread
             top.changes.push((self: Field) => {
                 if (self.food > 0.1) {self.fire += 0.1 * this.fire; }

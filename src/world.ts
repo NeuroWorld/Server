@@ -1,4 +1,6 @@
-import {range} from "lodash";
+import {range, sample} from "lodash";
+import mathjs = require("mathjs");
+import Brain from "./brain/brain";
 import DtoEntity from "./dtos/dto-entity";
 import DtoField from "./dtos/dto-field";
 import Entity from "./entity";
@@ -13,6 +15,8 @@ export default class World {
     protected tick: number;
     protected fields: Field[][];
     protected entities: Entity[];
+    protected maxEntityId: number;
+    protected clocks: number;
 
     constructor(protected reporter: Reporter) {
         // todo: generate id properly
@@ -28,10 +32,20 @@ export default class World {
             }
         }
 
-        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i));
+        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i, new Brain(3, 1)));
+
+        this.maxEntityId = ENTITY_COUNT;
 
         this.reporter.newWorld(this);
         this.reporter.newEntities(this.entities.map((e) => new DtoEntity(e)));
+    }
+
+    public start(tickTime: number = 100) {
+        this.clocks = setInterval(this.update.bind(this), tickTime);
+    }
+
+    public end() {
+        clearInterval(this.clocks);
     }
 
     public update() {
@@ -59,6 +73,19 @@ export default class World {
         });
 
         this.reporter.updateEntities(this.entities.map((e) => new DtoEntity(e)));
+        this.repopulate();
+    }
+
+    protected repopulate() {
+        this.entities = this.entities.filter((entity) => !entity.isDead);
+        const brains = this.generateBrains();
+        const newEntities = brains.map((brain) => new Entity(this.maxEntityId++, brain));
+        this.entities.push(...newEntities);
+    }
+
+    protected generateBrains(): Brain[] {
+        return range(ENTITY_COUNT - this.entities.length)
+            .map(() => sample(this.entities).brain.mutate());
     }
 
     protected buildFields() {
