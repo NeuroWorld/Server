@@ -5,4 +5,6 @@ export namespace Properties {
     export const WORLD_SIZE: number = 50;
     export const FIRE_CHANCE: number = 0.9999;
     export const FOOD_CHANCE: number = 0.99;
+
+    export const BRAIN_MUTABILITY: number = 10;
 }
