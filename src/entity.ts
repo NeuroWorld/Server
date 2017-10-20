@@ -1,33 +1,46 @@
-import {range} from "lodash";
 import Victor = require("victor");
+import Brain from "./brain/brain";
 import Field from "./field";
 import {Properties} from "./properties";
 import WORLD_SIZE = Properties.WORLD_SIZE;
 import ENTITY_SPEED = Properties.ENTITY_SPEED;
+import ENTITY_HUNGER_SPEED = Properties.ENTITY_HUNGER_SPEED;
 
 export default class Entity {
     public health: number;
     public hunger: number;
     public position: Victor;
     public direction: Victor;
+    public isDead: boolean;
 
-    constructor(public id: number) {
-        this.health = 1;
-        this.hunger = 1;
+    constructor(public id: number, public brain: Brain) {
+        this.isDead = false;
+        this.health = 10;
+        this.hunger = 0;
         this.position = new Victor(Math.random() * WORLD_SIZE, Math.random() * WORLD_SIZE);
         this.direction = new Victor(Math.random() - 0.5, Math.random() - 0.5).normalize();
     }
 
     public update(under: Field, top: Field, right: Field, down: Field, left: Field) {
-        range(arguments.length).forEach((i) => {
-            arguments[i].changes.push(function(self: Field) {
-                self.water += self.food;
-                self.food = 0;
-            });
-        });
-
+        this.eat(under);
         this.move();
         this.turn();
+
+        if (under.fire > 0) {
+            this.health -= under.fire * 0.2;
+        }
+
+        if (this.hunger - 0.5 > 0) {
+            this.health -= (this.hunger - 0.5);
+        }
+
+        if (this.hunger < 0.1) {
+            this.health += 0.1;
+        }
+
+        if (this.health <= 0) {
+            this.isDead = true;
+        }
     }
 
     public move() {
@@ -40,14 +53,15 @@ export default class Entity {
         this.direction.rotate(0.4 * (Math.random() - 0.5));
     }
 
-    public eat(food: number): number {
-        if (food > this.hunger) {
-            food -= this.hunger;
+    public eat(field: Field) {
+        this.hunger += ENTITY_HUNGER_SPEED;
+
+        if (field.food >= this.hunger) {
+            field.changes.push((self) => self.food -= this.hunger);
             this.hunger = 0;
-            return food;
         } else {
-            this.hunger -= food;
-            return 0;
+            this.hunger -= field.food;
+            field.changes.push((self) => self.food = 0);
         }
     }
 }

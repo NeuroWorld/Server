@@ -14,12 +14,12 @@ export default class Web {
             const reporter = new SocketReporter(client);
             const world = new World(reporter);
 
-            client.on("update", () => {
-                world.update();
+            client.on("start", () => {
+                world.start();
             });
 
             client.on("disconnect", () => {
-                console.log("Client disconnected.");
+                world.end();
             });
         });
     }

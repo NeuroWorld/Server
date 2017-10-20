@@ -63,26 +63,26 @@
       rect.draw();
     });
 
-    socket.on("entities-new", function(data) {
-      data.forEach(function(entity) {
-        const circle = new Konva.Circle({
-          x: entity.position[0] * 10,
-          y: entity.position[1] * 10,
-          radius: 4,
-          fill: "orange",
-        });
-
-        entities[entity.id] = circle;
-
-        entitiesLayer.add(circle);
-      });
-    });
-
-    socket.on("entities-update", function(data) {
+    socket.on("entities", function(data) {
       data.forEach(entity => {
-        const circle = entities[entity.id];
-        circle.setX(entity.position[0] * 10);
-        circle.setY(entity.position[1] * 10);
+        let circle = null;
+        if (entities[entity.id]) {
+          circle = entities[entity.id];
+          circle.setX(entity.position[0] * 10);
+          circle.setY(entity.position[1] * 10);
+        } else {
+          circle = new Konva.Circle({
+            x: entity.position[0] * 10,
+            y: entity.position[1] * 10,
+            radius: 4,
+            fill: "orange",
+          });
+          entities[entity.id] = circle;
+          entitiesLayer.add(circle);
+        }
+        if (entity.isDead) {
+          circle.fill("black");
+        }
       });
       entitiesLayer.batchDraw();
     });
@@ -96,9 +96,9 @@
       });
     });
 
-    setInterval(function() {
-      socket.emit("update");
-    }, 100);
+    setTimeout(function() {
+      socket.emit("start");
+    }, 1000);
 
     function allSmaller(key, ...values) {
       for (v in values) {
