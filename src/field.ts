@@ -40,7 +40,6 @@ export default class Field {
      * @param {Field} left
      */
     public update(top: Field, right: Field, down: Field, left: Field) {
-        return;
 
         // Fire spread
         if (this.fire > 0.1 && this.food && Math.random() > 0.5 ) {

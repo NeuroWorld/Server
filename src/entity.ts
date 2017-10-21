@@ -67,7 +67,6 @@ export default class Entity {
 
     public eat(field: Field) {
         this.hunger += ENTITY_HUNGER_SPEED;
-
         if (field.food >= this.hunger) {
             field.changes.push((self) => self.food -= this.hunger);
             this.hunger = 0;

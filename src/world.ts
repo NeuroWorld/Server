@@ -50,7 +50,9 @@ export default class World {
     }
 
     public update() {
-        this.buildFields();
+        if (this.tick++ % 10 === 0) {
+            this.buildFields();
+        }
         this.updateEntities();
         this.bakeFields();
     }
