@@ -11,6 +11,13 @@
   $(document).ready(function() {
     let worldSize = 20;
     let iteration = 0;
+    let dead = [];
+    let isDeadCounter = 0;
+    setInterval(() => {
+      dead.push(isDeadCounter);
+      console.log(isDeadCounter);
+      isDeadCounter = 0;
+    }, 10 * 1000);
 
     const stage = new Konva.Stage({
       container: 'game',
@@ -82,7 +89,9 @@
           entitiesLayer.add(circle);
         }
         if (entity.isDead) {
+          isDeadCounter++;
           circle.fill("black");
+          circle.destroy();
         }
 
         // let eye = null;

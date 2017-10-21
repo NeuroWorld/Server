@@ -1,4 +1,5 @@
 import {round} from "lodash";
+import Noise = require("noisejs");
 import DtoField from "./dtos/dto-field";
 import {Properties} from "./properties";
 import Reporter from "./reporters/reporter";
@@ -17,11 +18,16 @@ export default class Field {
 
     constructor(public x: number, public y: number, protected reporter: Reporter) {
         this.id = x * WORLD_SIZE + y;
-        this.food = Math.random() * 1;
+        this.food = 99;
         this.fire = 0;
         this.water = Math.random();
         this.rocks = Math.random();
         this.changes = [];
+
+        const noise = new Noise.Noise(300);
+        if (noise.perlin2(x / 10, y / 10) > 0) {
+            this.food = 0;
+        }
 
         reporter.newField(this);
     }
@@ -34,6 +40,8 @@ export default class Field {
      * @param {Field} left
      */
     public update(top: Field, right: Field, down: Field, left: Field) {
+        return;
+
         // Fire spread
         if (this.fire > 0.1 && this.food && Math.random() > 0.5 ) {
             // todo: randomize and properly calculate fire spread

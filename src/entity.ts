@@ -1,11 +1,11 @@
 import Victor = require("victor");
 import Brain from "./brain/brain";
+import Eye from "./eye";
 import Field from "./field";
 import {Properties} from "./properties";
 import WORLD_SIZE = Properties.WORLD_SIZE;
 import ENTITY_SPEED = Properties.ENTITY_SPEED;
 import ENTITY_HUNGER_SPEED = Properties.ENTITY_HUNGER_SPEED;
-import Eye from "./eye";
 import {sigmoid} from "./utils";
 
 export default class Entity {

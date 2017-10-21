@@ -40,7 +40,8 @@ export default class World {
         this.reporter.newEntities(this.entities.map((e) => new DtoEntity(e)));
     }
 
-    public start(tickTime: number = 100) {
+    public start(tickTime: number = 50) {
+        console.log("Starting server with: " + tickTime);
         this.clocks = setInterval(this.update.bind(this), tickTime);
     }
 

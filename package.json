@@ -19,6 +19,7 @@
     "@types/victor": "^1.1.0",
     "lodash": "^4.17.4",
     "mathjs": "^3.16.5",
+    "noisejs": "^2.1.0",
     "socket.io": "2.0.3",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3",
