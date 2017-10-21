@@ -1,26 +1,27 @@
-import {intersectionWith, range} from "lodash";
+import {intersectionWith, range, uniqWith} from "lodash";
 import Victor = require("victor");
 import Field from "./field";
 import {Properties} from "./properties";
+import {isVictorEqual} from "./utils";
 import WORLD_SIZE = Properties.WORLD_SIZE;
-
 const {pow, sqrt} = Math;
 
 export default class Eye {
+    public static forwardFields(position: Victor, direction: Victor, distance: number, fields: Field[][]): Field[] {
+        const victors = Eye.forward(position, direction, distance);
+        return Eye.fieldsFromVictors(victors, fields);
+    }
+
     public static forward(position: Victor, direction: Victor, distance: number) {
         const near = Eye.nearby(position, distance);
 
-        const heads = range(distance).map((i) => {
-            const pos = position.clone().add(direction.clone().multiplyScalar(distance));
-            return Eye.nearby(pos, distance - i);
-        });
+        const apexPoint = position.clone().add(direction.clone().multiplyScalar(distance));
+        const apex = Eye.nearby(apexPoint, distance);
 
-        console.log(near, heads);
-
-        return intersectionWith(near, ...heads, (a: Victor, b: Victor) => a.x === b.x && a.y === b.y);
+        return intersectionWith(near, apex, isVictorEqual);
     }
 
-    public static fieldsFromVictors(coords: Victor[], fields: Field[]): Field[] {
+    public static fieldsFromVictors(coords: Victor[], fields: Field[][]): Field[] {
         return coords.map((coord) => fields[(coord.x + WORLD_SIZE) % WORLD_SIZE][(coord.y + WORLD_SIZE) % WORLD_SIZE]);
     }
 

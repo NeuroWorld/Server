@@ -32,7 +32,7 @@ export default class World {
             }
         }
 
-        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i, new Brain(3, 1)));
+        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i, new Brain(2, 2)));
 
         this.maxEntityId = ENTITY_COUNT;
 
@@ -69,6 +69,7 @@ export default class World {
                 this.fields[(x + p) % s][y],
                 this.fields[x][(y + m) % s],
                 this.fields[(x + m) % s][y],
+                this.fields,
             );
         });
 
