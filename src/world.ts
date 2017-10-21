@@ -1,4 +1,4 @@
-import {range, sample} from "lodash";
+import {range, sampleSize} from "lodash";
 import mathjs = require("mathjs");
 import Brain from "./brain/brain";
 import DtoEntity from "./dtos/dto-entity";
@@ -84,8 +84,7 @@ export default class World {
     }
 
     protected generateBrains(): Brain[] {
-        return range(ENTITY_COUNT - this.entities.length)
-            .map(() => sample(this.entities).brain.mutate());
+        return sampleSize(this.entities, ENTITY_COUNT - this.entities.length).map((entity) => entity.brain.mutate());
     }
 
     protected buildFields() {

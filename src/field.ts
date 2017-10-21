@@ -75,10 +75,10 @@ export default class Field {
                 self.food += Math.random() > FOOD_CHANCE ? 0.1 * (1 - self.rocks) : 0;
             });
 
-            top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            right.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            down.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            left.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            // top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            // right.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            // down.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            // left.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
         }
 
         // Start a fire
