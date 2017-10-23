@@ -26,14 +26,15 @@ export default class Entity {
     public update(under: Field, top: Field, right: Field, down: Field, left: Field, fields: Field[][]) {
         this.eat(under);
 
-        const inputs = Eye.forwardFields(this.position, this.direction, 4, fields).reduce((curry, value: Field) => {
+        const inputs = Eye.forwardFields(this.position, this.direction, 3, fields).reduce((curry, value: Field) => {
             curry[0] += value.food;
             curry[1] += value.fire;
             return curry;
         }, [0, 0]);
 
         const output = this.brain.think(inputs);
-        const turn = Math.atan(output[0] - output[1]) * 2 / Math.PI;
+        // const turn = Math.atan(output[0] - output[1]) * 2 / Math.PI;
+        const turn = output[0] > output[1] ? 1 : 0;
 
         this.move();
         this.turn(turn);
