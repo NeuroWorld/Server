@@ -11,6 +11,13 @@
   $(document).ready(function() {
     let worldSize = 20;
     let iteration = 0;
+    let dead = [];
+    let isDeadCounter = 0;
+    setInterval(() => {
+      dead.push(isDeadCounter);
+      console.log(isDeadCounter);
+      isDeadCounter = 0;
+    }, 10 * 1000);
 
     const stage = new Konva.Stage({
       container: 'game',
@@ -35,6 +42,7 @@
 
     const fields = {};
     const entities = {};
+    const eyes = {};
 
     const socket = io('http://localhost:3030');
     socket.on("world-new", function(data) {
@@ -81,8 +89,24 @@
           entitiesLayer.add(circle);
         }
         if (entity.isDead) {
+          isDeadCounter++;
           circle.fill("black");
+          circle.destroy();
         }
+
+        // let eye = null;
+        // let e = entity;
+        // if (eyes[entity.id]) {
+        //   eye = eyes[entity[id]];
+        // } else {
+        //   eye = new Konva.Line({
+        //     points: [e.position[0] * 10, e.position[1] * 10, e.position[0] * 10 + e.direction[0] * 5, e.position[1] * 10 + e.direction[1] * 5],
+        //     stroke: 'purple',
+        //     strokeWidth: 2,
+        //   });
+        //   entitiesLayer.add(eye);
+        // }
+
       });
       entitiesLayer.batchDraw();
     });

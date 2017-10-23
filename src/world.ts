@@ -1,4 +1,4 @@
-import {range, sample} from "lodash";
+import {range, sampleSize} from "lodash";
 import mathjs = require("mathjs");
 import Brain from "./brain/brain";
 import DtoEntity from "./dtos/dto-entity";
@@ -32,7 +32,7 @@ export default class World {
             }
         }
 
-        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i, new Brain(3, 1)));
+        this.entities = range(ENTITY_COUNT).map((i) => new Entity(i, new Brain(2, 2)));
 
         this.maxEntityId = ENTITY_COUNT;
 
@@ -40,7 +40,8 @@ export default class World {
         this.reporter.newEntities(this.entities.map((e) => new DtoEntity(e)));
     }
 
-    public start(tickTime: number = 100) {
+    public start(tickTime: number = 50) {
+        console.log("Starting server with: " + tickTime);
         this.clocks = setInterval(this.update.bind(this), tickTime);
     }
 
@@ -49,7 +50,9 @@ export default class World {
     }
 
     public update() {
-        this.buildFields();
+        if (this.tick++ % 10 === 0) {
+            this.buildFields();
+        }
         this.updateEntities();
         this.bakeFields();
     }
@@ -69,11 +72,30 @@ export default class World {
                 this.fields[(x + p) % s][y],
                 this.fields[x][(y + m) % s],
                 this.fields[(x + m) % s][y],
+                this.fields,
             );
         });
 
         this.reporter.updateEntities(this.entities.map((e) => new DtoEntity(e)));
         this.repopulate();
+
+        this.stats();
+    }
+
+    protected stats() {
+        if (Math.random() > 0.05) {
+            return;
+        }
+
+        let min = 999999999;
+        let max = 0;
+        let avg = 0;
+        this.entities.forEach((e) => {
+            min = Math.min(e.brain.iteration, min);
+            max = Math.max(e.brain.iteration, max);
+            avg += e.brain.iteration;
+        });
+        console.log(`Min: ${min}, Max: ${max}, Avg: ${avg / this.entities.length}.`);
     }
 
     protected repopulate() {
@@ -84,8 +106,7 @@ export default class World {
     }
 
     protected generateBrains(): Brain[] {
-        return range(ENTITY_COUNT - this.entities.length)
-            .map(() => sample(this.entities).brain.mutate());
+        return sampleSize(this.entities, ENTITY_COUNT - this.entities.length).map((entity) => entity.brain.mutate());
     }
 
     protected buildFields() {

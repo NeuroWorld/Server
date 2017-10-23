@@ -1,12 +1,11 @@
 import mathjs = require("mathjs");
 import {Properties} from "../properties";
 import BRAIN_MUTABILITY = Properties.BRAIN_MUTABILITY;
+import {sigmoid} from "../utils";
 
 export default class Brain {
 
-    protected static sigmoid(x: number): number {
-        return 1 / ( 1 + Math.pow(Math.E, -x));
-    }
+    public iteration: number;
 
     protected weights;
 
@@ -16,6 +15,7 @@ export default class Brain {
 
     public constructor(protected height: number, protected layers: number, randomize: boolean = true) {
         this.mutability = BRAIN_MUTABILITY;
+        this.iteration = 0;
 
         if (randomize) {
             this.randomize();
@@ -34,6 +34,7 @@ export default class Brain {
         brain.weights = mathjs.clone(this.weights);
         brain.biases = mathjs.clone(this.biases);
         brain.mutateProperties();
+        brain.iteration = this.iteration + 1;
 
         return brain;
     }
@@ -49,7 +50,7 @@ export default class Brain {
             const product = mathjs.multiply(this.weights[i], outputs);
             const biased = mathjs.add(product, this.biases[i]);
             for (let j = 0; j < outputs.length; ++j) {
-                outputs[j] = Brain.sigmoid(biased[j]);
+                outputs[j] = sigmoid(biased[j]);
             }
         }
 

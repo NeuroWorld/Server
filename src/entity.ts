@@ -1,10 +1,12 @@
 import Victor = require("victor");
 import Brain from "./brain/brain";
+import Eye from "./eye";
 import Field from "./field";
 import {Properties} from "./properties";
 import WORLD_SIZE = Properties.WORLD_SIZE;
 import ENTITY_SPEED = Properties.ENTITY_SPEED;
 import ENTITY_HUNGER_SPEED = Properties.ENTITY_HUNGER_SPEED;
+import {sigmoid} from "./utils";
 
 export default class Entity {
     public health: number;
@@ -21,10 +23,21 @@ export default class Entity {
         this.direction = new Victor(Math.random() - 0.5, Math.random() - 0.5).normalize();
     }
 
-    public update(under: Field, top: Field, right: Field, down: Field, left: Field) {
+    public update(under: Field, top: Field, right: Field, down: Field, left: Field, fields: Field[][]) {
         this.eat(under);
+
+        const inputs = Eye.forwardFields(this.position, this.direction, 3, fields).reduce((curry, value: Field) => {
+            curry[0] += value.food;
+            curry[1] += value.fire;
+            return curry;
+        }, [0, 0]);
+
+        const output = this.brain.think(inputs);
+        // const turn = Math.atan(output[0] - output[1]) * 2 / Math.PI;
+        const turn = output[0] > output[1] ? 1 : 0;
+
         this.move();
-        this.turn();
+        this.turn(turn);
 
         if (under.fire > 0) {
             this.health -= under.fire * 0.2;
@@ -34,7 +47,7 @@ export default class Entity {
             this.health -= (this.hunger - 0.5);
         }
 
-        if (this.hunger < 0.1) {
+        if (this.hunger < 0.1 && this.health < 10) {
             this.health += 0.1;
         }
 
@@ -49,15 +62,15 @@ export default class Entity {
         this.position.y = (this.position.y + WORLD_SIZE) % WORLD_SIZE;
     }
 
-    public turn() {
-        this.direction.rotate(0.4 * (Math.random() - 0.5));
+    public turn(direction: number) {
+        this.direction.rotate(0.4 * direction * 4);
     }
 
     public eat(field: Field) {
         this.hunger += ENTITY_HUNGER_SPEED;
-
         if (field.food >= this.hunger) {
-            field.changes.push((self) => self.food -= this.hunger);
+            const temp = this.hunger;
+            field.changes.push((self) => self.food -= temp);
             this.hunger = 0;
         } else {
             this.hunger -= field.food;
