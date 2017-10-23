@@ -7,6 +7,7 @@ export default class DtoEntity {
     public direction: [number, number];
     public position: [number, number];
     public isDead: boolean;
+    public iteration: number;
 
     constructor(entity: Entity) {
         this.id = entity.id;
@@ -15,5 +16,6 @@ export default class DtoEntity {
         this.direction = [entity.direction.x, entity.direction.y];
         this.position = [entity.position.x, entity.position.y];
         this.isDead = entity.isDead;
+        this.iteration = entity.brain.iteration;
     }
 }

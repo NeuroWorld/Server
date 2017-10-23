@@ -7,6 +7,7 @@ import {between} from "./utils";
 import WORLD_SIZE = Properties.WORLD_SIZE;
 import FIRE_CHANCE = Properties.FIRE_CHANCE;
 import FOOD_CHANCE = Properties.FOOD_CHANCE;
+import FOOD_SPREAD = Properties.FOOD_SPREAD;
 
 export default class Field {
     public food: number;
@@ -18,7 +19,7 @@ export default class Field {
 
     constructor(public x: number, public y: number, protected reporter: Reporter) {
         this.id = x * WORLD_SIZE + y;
-        this.food = 99;
+        this.food = 1;
         this.fire = 0;
         this.water = Math.random();
         this.rocks = Math.random();
@@ -79,13 +80,13 @@ export default class Field {
         // Regenerate food
         if (this.fire === 0) {
             this.changes.push(function(self: Field) {
-                self.food += Math.random() > FOOD_CHANCE ? 0.1 * (1 - self.rocks) : 0;
+                self.food += Math.random() > FOOD_CHANCE ? 0.4 * (1 - self.rocks) : 0;
             });
 
-            // top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            // right.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            // down.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
-            // left.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * 0.01; }});
+            top.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * FOOD_SPREAD; }});
+            right.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * FOOD_SPREAD; }});
+            down.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * FOOD_SPREAD; }});
+            left.changes.push((self: Field) => {if (self.fire === 0) { self.food += this.food * FOOD_SPREAD; }});
         }
 
         // Start a fire

@@ -47,7 +47,7 @@ export default class Entity {
             this.health -= (this.hunger - 0.5);
         }
 
-        if (this.hunger < 0.1) {
+        if (this.hunger < 0.1 && this.health < 10) {
             this.health += 0.1;
         }
 
@@ -63,13 +63,14 @@ export default class Entity {
     }
 
     public turn(direction: number) {
-        this.direction.rotate(0.4 * direction);
+        this.direction.rotate(0.4 * direction * 4);
     }
 
     public eat(field: Field) {
         this.hunger += ENTITY_HUNGER_SPEED;
         if (field.food >= this.hunger) {
-            field.changes.push((self) => self.food -= this.hunger);
+            const temp = this.hunger;
+            field.changes.push((self) => self.food -= temp);
             this.hunger = 0;
         } else {
             this.hunger -= field.food;

@@ -78,6 +78,24 @@ export default class World {
 
         this.reporter.updateEntities(this.entities.map((e) => new DtoEntity(e)));
         this.repopulate();
+
+        this.stats();
+    }
+
+    protected stats() {
+        if (Math.random() > 0.05) {
+            return;
+        }
+
+        let min = 999999999;
+        let max = 0;
+        let avg = 0;
+        this.entities.forEach((e) => {
+            min = Math.min(e.brain.iteration, min);
+            max = Math.max(e.brain.iteration, max);
+            avg += e.brain.iteration;
+        });
+        console.log(`Min: ${min}, Max: ${max}, Avg: ${avg / this.entities.length}.`);
     }
 
     protected repopulate() {

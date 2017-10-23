@@ -5,6 +5,8 @@ import {sigmoid} from "../utils";
 
 export default class Brain {
 
+    public iteration: number;
+
     protected weights;
 
     protected biases;
@@ -13,6 +15,7 @@ export default class Brain {
 
     public constructor(protected height: number, protected layers: number, randomize: boolean = true) {
         this.mutability = BRAIN_MUTABILITY;
+        this.iteration = 0;
 
         if (randomize) {
             this.randomize();
@@ -31,6 +34,7 @@ export default class Brain {
         brain.weights = mathjs.clone(this.weights);
         brain.biases = mathjs.clone(this.biases);
         brain.mutateProperties();
+        brain.iteration = this.iteration + 1;
 
         return brain;
     }
